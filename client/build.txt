@@ -1,0 +1,106 @@
+﻿[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 23 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 630ms
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: ([3  
+  1mΓ£ù[39m Build faile   
+ d in 630ms:String) [],    
+ RemoteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+[31merror during build:
+[31m[vite]: Rollup failed 
+to resolve import 
+"date-fns" from "C:/Users/a
+dmin/Desktop/all_system/Sma
+rt inventory/inventory-syst
+em-for-business/client/src/
+pages/Dashboard.jsx".
+This is most likely 
+unintended because it can 
+break your application at 
+runtime.
+If you do want to 
+externalize this module 
+explicitly add it to
+`build.rollupOptions.extern
+al`[31m
+    at viteLog (file:///C:/
+Users/admin/Desktop/all_sys
+tem/Smart%20inventory/inven
+tory-system-for-business/cl
+ient/node_modules/vite/dist
+/node/chunks/config.js:3363
+5:57)
+    at file:///C:/Users/adm
+in/Desktop/all_system/Smart
+%20inventory/inventory-syst
+em-for-business/client/node
+_modules/vite/dist/node/chu
+nks/config.js:33669:73
+    at onwarn (file:///C:/U
+sers/admin/Desktop/all_syst
+em/Smart%20inventory/invent
+ory-system-for-business/cli
+ent/node_modules/@vitejs/pl
+ugin-react/dist/index.js:76
+:7)
+    at file:///C:/Users/adm
+in/Desktop/all_system/Smart
+%20inventory/inventory-syst
+em-for-business/client/node
+_modules/vite/dist/node/chu
+nks/config.js:33669:28
+    at onRollupLog (file://
+/C:/Users/admin/Desktop/all
+_system/Smart%20inventory/i
+nventory-system-for-busines
+s/client/node_modules/vite/
+dist/node/chunks/config.js:
+33664:63)
+    at onLog (file:///C:/Us
+ers/admin/Desktop/all_syste
+m/Smart%20inventory/invento
+ry-system-for-business/clie
+nt/node_modules/vite/dist/n
+ode/chunks/config.js:33467:
+4)
+    at file:///C:/Users/adm
+in/Desktop/all_system/Smart
+%20inventory/inventory-syst
+em-for-business/client/node
+_modules/rollup/dist/es/sha
+red/node-entry.js:20981:32
+    at Object.logger [as 
+onLog] (file:///C:/Users/ad
+min/Desktop/all_system/Smar
+t%20inventory/inventory-sys
+tem-for-business/client/nod
+e_modules/rollup/dist/es/sh
+ared/node-entry.js:22968:9)
+    at ModuleLoader.handleI
+nvalidResolvedId (file:///C
+:/Users/admin/Desktop/all_s
+ystem/Smart%20inventory/inv
+entory-system-for-business/
+client/node_modules/rollup/
+dist/es/shared/node-entry.j
+s:21712:26)
+    at file:///C:/Users/adm
+in/Desktop/all_system/Smart
+%20inventory/inventory-syst
+em-for-business/client/node
+_modules/rollup/dist/es/sha
+red/node-entry.js:21670:26
+[39m
