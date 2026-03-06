@@ -1,0 +1,173 @@
+// prisma/schema.prisma
+// Smart Inventory for Business — Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────
+
+enum CategoryType {
+  INGREDIENT
+  DISH
+}
+
+enum PaymentMethod {
+  CASH
+  GCASH
+  OTHER
+}
+
+// ─── Categories ───────────────────────────────────────────
+
+model Category {
+  id        String       @id @default(cuid())
+  name      String
+  type      CategoryType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  ingredients Ingredient[]
+  dishes      Dish[]
+
+  @@map("categories")
+}
+
+// ─── Raw Ingredients ──────────────────────────────────────
+
+model Ingredient {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  unit              String   // e.g. "g", "ml", "pcs", "kg"
+  currentStock      Float    @default(0)
+  lowStockThreshold Float    @default(0)
+  costPerUnit       Float    @default(0)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  recipeItems RecipeItem[]
+  restockLogs RestockLog[]
+  wasteLogs   WasteLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@map("ingredients")
+}
+
+// ─── Finished Dishes ──────────────────────────────────────
+
+model Dish {
+  id           String  @id @default(cuid())
+  name         String  @unique
+  sellingPrice Float
+  imageUrl     String?
+  isAvailable  Boolean @default(true)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  recipeItems RecipeItem[]
+  saleItems   SaleItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@map("dishes")
+}
+
+// ─── Recipe Mapping (Dish ↔ Ingredient) ───────────────────
+
+model RecipeItem {
+  id             String @id @default(cuid())
+  quantityNeeded Float  // amount of ingredient per 1 serving
+
+  dishId       String
+  dish         Dish       @relation(fields: [dishId], references: [id], onDelete: Cascade)
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([dishId, ingredientId])
+  @@index([dishId])
+  @@index([ingredientId])
+  @@map("recipe_items")
+}
+
+// ─── Sales (Transactions) ─────────────────────────────────
+
+model Sale {
+  id            String        @id @default(cuid())
+  totalAmount   Float
+  paymentMethod PaymentMethod @default(CASH)
+  remarks       String?
+
+  items SaleItem[]
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("sales")
+}
+
+// ─── Sale Line Items ──────────────────────────────────────
+
+model SaleItem {
+  id       String @id @default(cuid())
+  quantity Int
+  unitPrice Float // snapshot of dish price at sale time
+  subtotal  Float // quantity * unitPrice
+
+  saleId String
+  sale   Sale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  dishId String
+  dish   Dish @relation(fields: [dishId], references: [id])
+
+  @@index([saleId])
+  @@index([dishId])
+  @@map("sale_items")
+}
+
+// ─── Restocking / Expense Logging ─────────────────────────
+
+model RestockLog {
+  id        String  @id @default(cuid())
+  quantity  Float   // how much was added (in ingredient's unit)
+  totalCost Float   // total money spent on this restock
+  supplier  String?
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([ingredientId])
+  @@index([createdAt])
+  @@map("restock_logs")
+}
+
+// ─── Waste / Spoilage Logging ─────────────────────────────
+
+model WasteLog {
+  id       String  @id @default(cuid())
+  quantity Float   // amount wasted (in ingredient's unit)
+  reason   String? // e.g. "Expired", "Burnt", "Unsold"
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([ingredientId])
+  @@index([createdAt])
+  @@map("waste_logs")
+}
